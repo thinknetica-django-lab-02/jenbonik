@@ -1,5 +1,5 @@
 .pyc
 .idea
-/static/
+static
 __pycache__
 db.sqlite3
