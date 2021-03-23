@@ -15,7 +15,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from main import views
+from django.contrib.flatpages import views as flatpages_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', views.home, name='home'),
+    path('about/', flatpages_views.flatpage, {'url': '/about/'}, name='about'),
+    path('contacts/', flatpages_views.flatpage, {'url': '/contacts/'}, name='contacts'),
 ]
