@@ -1,20 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title>{{ flatpage.title }} - Lucky Deal</title>
-</head>
+{% extends "main/base.html" %}
 
-<body>
-    <div class="navbar-collapse collapse">
-        <ul class="nav navbar-nav">
-            <li><a href="{% url 'about' %}">О нас</a></li>
-            <li><a href="{% url 'contacts' %}">Контакты</a></li>
-        </ul>
-    </div>
+{% block content %}
 
-    <div>
 {{ flatpage.content }}
-    </div>
-</body>
-</html>
+
+{% endblock %}
