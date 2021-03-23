@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.flatpages',
-    'main'
+    'main',
+    'ckeditor'
 ]
 
 MIDDLEWARE = [
@@ -124,3 +125,6 @@ STATIC_URL = '/static/'
 
 # For django.contrib.sites
 SITE_ID = 1
+
+# For ckeditor
+CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
