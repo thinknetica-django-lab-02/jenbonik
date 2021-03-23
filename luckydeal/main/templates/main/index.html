@@ -1,27 +1,17 @@
-{% extends "flatpages/default.html" %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Home - Lucky Deal</title>
 
-{% block content %}
+</head>
 
-<div class="jumbotron">
-    <h1>Lucky Deal</h1>
-    <p class="lead">Lucky Deal - это сервис для поиска и продажи любых товаров. Мы поможем покупателям найти честных продавцов, а продавцам - постоянных покупателей</p>
-</div>
-
-<div class="row">
-    <div class="col-md-4">
-        <h2>Покупателям</h2>
-        <p>
-            Изучайте предложения, найдите наилучшие
-        </p>
+<body>
+    <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+            <li><a href="{% url 'about' %}">О нас</a></li>
+            <li><a href="{% url 'contacts' %}">Контакты</a></li>
+        </ul>
     </div>
-    <div class="col-md-4">
-        <h2>Продавцам</h2>
-        <p>Размещайте объявления, найдите своего клиента</p>
-    </div>
-    <div class="col-md-4">
-        <h2>Помощь</h2>
-        <p>Если есть вопросы - Вам сюда</p>
-    </div>
-</div>
-
-{% endblock %}
+</body>
+</html>
