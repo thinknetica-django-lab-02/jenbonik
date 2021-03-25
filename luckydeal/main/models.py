@@ -62,6 +62,9 @@ class Tag(BaseIdentificatedObject):
 class Seller(BaseIdentificatedObject):
     name = models.CharField(max_length = 50, verbose_name = 'Наименование', 
         help_text = 'Наименование', default = '')
+    country = models.ForeignKey('Country', on_delete = models.PROTECT,
+        verbose_name = 'Страна', help_text = 'Страна',
+        related_name = 'sellers')
     
     def __str__(self):
         return self.name
@@ -69,3 +72,17 @@ class Seller(BaseIdentificatedObject):
     class Meta:
         verbose_name = 'Продавец'
         verbose_name_plural = 'Продавец'
+
+
+class Country(BaseIdentificatedObject):
+    iso3 = models.CharField(max_length = 3, verbose_name = 'ISO3', 
+        help_text = 'ISO3', default = '')
+    name = models.CharField(max_length = 50, verbose_name = 'Наименование', 
+        help_text = 'Наименование', default = '')
+    
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        verbose_name = 'Страна'
+        verbose_name_plural = 'Страны'
