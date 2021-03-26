@@ -3,7 +3,11 @@ from django.db import models
 import uuid
 
 
-class BaseIdentificatedObject(models.Model):
+class Identificated(models.Model):
+    """ Абстрактная модель предоставляющая единообразный первичный ключ 
+    для используемых моделей. 
+    Предполагается что модели будут наследовать класс Identificated"""
+    
     id = models.UUIDField(auto_created = True, primary_key = True, 
         verbose_name = 'Идентификатор', default = uuid.uuid4, editable = False)
     
@@ -11,7 +15,9 @@ class BaseIdentificatedObject(models.Model):
         abstract = True
 
 
-class Good(BaseIdentificatedObject):
+class Good(Identificated):
+    """ Товар. Создержит описание продаваемых сущностей """
+    
     name = models.CharField(max_length = 200, verbose_name = 'Наименование', 
         help_text = 'Наименование', default = '')
     description = models.CharField(max_length = 500, verbose_name = 'Описание', 
@@ -32,7 +38,9 @@ class Good(BaseIdentificatedObject):
         verbose_name_plural = 'Товары'
 
 
-class Category(BaseIdentificatedObject):
+class Category(Identificated):
+    """ Модель категории товара. Товар может быть связан только с одной категорией"""
+
     name = models.CharField(max_length = 50, verbose_name = 'Наименование', 
         help_text = 'Наименование', default = '')
     
@@ -41,7 +49,9 @@ class Category(BaseIdentificatedObject):
         verbose_name_plural = 'Категории'
 
 
-class Tag(BaseIdentificatedObject):
+class Tag(Identificated):
+    """ Тэг товара. Товар может быть связан с несколькими тэгами"""
+
     name = models.CharField(max_length = 30, verbose_name = 'Наименование', 
         help_text = 'Наименование', default = '')
     
@@ -50,7 +60,9 @@ class Tag(BaseIdentificatedObject):
         verbose_name_plural = 'Тэги'
 
 
-class Seller(BaseIdentificatedObject):
+class Seller(Identificated):
+    """ Продавец. Каждый товар принадлежит ровно одному продавцу"""
+    
     name = models.CharField(max_length = 50, verbose_name = 'Наименование', 
         help_text = 'Наименование', default = '')
     
