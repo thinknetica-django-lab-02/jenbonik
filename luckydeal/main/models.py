@@ -33,6 +33,9 @@ class Good(Identificated):
     tags = models.ManyToManyField('Tag', related_name = 'goods',
         verbose_name = 'Тэги', help_text = 'Тэги')
     
+    def __str__(self):
+        return self.name
+    
     class Meta:
         verbose_name = 'Товар'
         verbose_name_plural = 'Товары'
@@ -43,6 +46,9 @@ class Category(Identificated):
 
     name = models.CharField(max_length = 50, verbose_name = 'Наименование', 
         help_text = 'Наименование', default = '')
+    
+    def __str__(self):
+        return self.name
     
     class Meta:
         verbose_name = 'Категория'
@@ -55,6 +61,9 @@ class Tag(Identificated):
     name = models.CharField(max_length = 30, verbose_name = 'Наименование', 
         help_text = 'Наименование', default = '')
     
+    def __str__(self):
+        return self.name
+    
     class Meta:
         verbose_name = 'Тэг'
         verbose_name_plural = 'Тэги'
@@ -65,6 +74,9 @@ class Seller(Identificated):
     
     name = models.CharField(max_length = 50, verbose_name = 'Наименование', 
         help_text = 'Наименование', default = '')
+    
+    def __str__(self):
+        return self.name
     
     class Meta:
         verbose_name = 'Продавец'
