@@ -1,3 +1,4 @@
+{% load custom_tags %}
 <div class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
@@ -6,7 +7,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="/" class="navbar-brand">Lucky Deal ({{ user }})</a>
+            <a href="/" class="navbar-brand">Lucky Deal ({{ user|invert }}, {% server_date_time '%m/%d/%Y %H:%M:%S' %})</a>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
