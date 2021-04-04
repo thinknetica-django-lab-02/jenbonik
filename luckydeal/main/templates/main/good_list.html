@@ -2,12 +2,41 @@
 
 {% block content %}
 
-<h2>Товары</h2>
+<h2 class = "goodshead">
+    <a href="{% url 'goods' %}">Товары</a>
+    {% if tag_filter %}
+        {% for tag in tag_filter %}
+            | {{ tag.name }}
+        {% endfor %}
+    {% endif %}
+</h2>
+
 <table>
-    <tr><th>Наименование</th><th>Цена</th><th>Продавец</th></tr>
-    {% for good in object_list %}
-        <tr><td><a href="{{ good.get_absolute_url }}">{{ good.name }}</a></td><td>{{ good.price }}</td><td>{{ good.seller }}</td></tr>
-    {% endfor %}
+<tr>
+    <td>
+        <table class = "goodslist">
+            <tr><th>Наименование</th><th>Цена</th><th>Продавец</th></tr>
+            {% for good in object_list %}
+                <tr><td><a href="{{ good.get_absolute_url }}">{{ good.name }}</a></td><td>{{ good.price }}</td><td>{{ good.seller }}</td></tr>
+            {% endfor %}
+        </table>
+        </td>
+        <td>
+        <div class = "goodstags">
+            <ul>
+                {% for tag in tags %}
+                    <li><a href="{% url 'goods' %}?tag={{tag.id}}">{{ tag.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        </td>
+    </tr>
 </table>
+
+{% if tag_filter %}
+    {% include "main/good_tag_list_pagination.html" %}
+{% else %}
+    {% include "main/good_list_pagination.html" %}
+{% endif %}
 
 {% endblock %}

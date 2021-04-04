@@ -12,6 +12,13 @@ def invert(value: str) -> str:
     return value[::-1]
 
 
+@register.filter
+def dec(number: int) -> int:
+    """ Декремент значения """
+    return number - 1
+
+
 @register.simple_tag
 def server_date_time(format_string: str) -> str:
+    """ Время сервера """
     return datetime.datetime.now().strftime(format_string)

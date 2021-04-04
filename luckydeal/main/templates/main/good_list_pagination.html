@@ -1,0 +1,41 @@
+{% load custom_tags %}
+
+<div class = "pagination">
+    <span class = "step-links">
+        {% if page_obj.has_previous %}
+            <a href="{% url 'goods' %}?page=1">&laquo; 1</a>
+            {% if page_obj.previous_page_number > 2 %}
+                {% if page_obj.previous_page_number != 3 %}
+                    <span class="current">
+                        ..
+                    </span>
+                {% else %}
+                    <a href="{% url 'goods' %}?page=2">2</a>        
+                {% endif %}
+            {% endif %}
+            {% if page_obj.previous_page_number != 1 %}
+                <a href="{% url 'goods' %}?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+            {% endif %}
+        {% endif %}
+
+        <span class="current">
+            {{ page_obj.number }}
+        </span>
+
+        {% if page_obj.has_next %}
+            {% if page_obj.next_page_number != page_obj.paginator.num_pages %}
+                <a href="{% url 'goods' %}?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+            {% endif %}
+            {% if page_obj.next_page_number < page_obj.paginator.num_pages|dec %}
+                {% if page_obj.next_page_number != page_obj.paginator.num_pages|dec|dec %}
+                    <span class="current">
+                        ..
+                    </span>
+                {% else %}
+                    <a href="{% url 'goods' %}?page={{ page_obj.paginator.num_pages|dec }}">{{ page_obj.paginator.num_pages|dec }}</a>        
+                {% endif %}   
+            {% endif %}
+            <a href="{% url 'goods' %}?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }} &raquo;</a>
+        {% endif %}
+    </span>
+</div>
