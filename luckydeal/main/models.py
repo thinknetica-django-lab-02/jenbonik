@@ -17,7 +17,7 @@ class Identificated(models.Model):
 
 
 class Good(Identificated):
-    """ Товар. Создержит описание продаваемых сущностей """
+    """ Товар. Содержит описание продаваемых сущностей """
     
     name = models.CharField(max_length = 200, verbose_name = 'Наименование', 
         help_text = 'Наименование', default = '')
@@ -46,7 +46,7 @@ class Good(Identificated):
 
 
 class Category(Identificated):
-    """ Модель категории товара. Товар может быть связан только с одной категорией"""
+    """ Модель категории товара. Товар может быть связан только с одной категорией """
 
     name = models.CharField(max_length = 50, verbose_name = 'Наименование', 
         help_text = 'Наименование', default = '')
@@ -90,7 +90,8 @@ class Seller(Identificated):
         verbose_name_plural = 'Продавец'
 
 
-class Country(BaseIdentificatedObject):
+class Country(Identificated):
+    """ Страна продавца """
     iso3 = models.CharField(max_length = 3, verbose_name = 'ISO3', 
         help_text = 'ISO3', default = '')
     name = models.CharField(max_length = 50, verbose_name = 'Наименование', 
