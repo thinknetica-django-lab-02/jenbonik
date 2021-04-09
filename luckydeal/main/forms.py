@@ -1,0 +1,12 @@
+from django.contrib.auth.models import User
+from django.forms import ModelForm
+from django.forms.models import inlineformset_factory
+
+from main.models import UserProfile 
+
+class UserForm(ModelForm):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'email', )
+
+UserProfileFormset = inlineformset_factory(User, UserProfile, extra = 1, fields = ('description', ))

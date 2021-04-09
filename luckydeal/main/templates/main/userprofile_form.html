@@ -4,10 +4,24 @@
 
 <form action="" method="post">
     {% csrf_token %}
+    {{ profileformset.management_form }}
+
     <table>
-    {{ form.as_table }}
+    {% for field in userform %}
+        <tr> 
+            <th>{{ field.label_tag }}</th><td>{{ field }}</td>
+        </tr>
+    {% endfor %}
+    {% for form in profileformset %}
+        {{form.id}}
+        <tr> 
+            <th>Описание</th><td>{{ form.description }}</td>
+        </tr>
+    {% endfor %}
     </table>
-    <input type="submit" value="Submit" />
+    <div>
+        <input type="submit" value="Submit" />
+    </div>
 
 </form>
 {% endblock %}
