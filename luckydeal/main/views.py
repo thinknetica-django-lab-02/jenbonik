@@ -1,9 +1,11 @@
 from django.shortcuts import render
 from django.views.generic import DetailView
 from django.views.generic import ListView
+from django.views.generic.edit import UpdateView
 
 from main.models import Good
 from main.models import Tag
+from main.models import UserProfile
 
 def home(request):
     """ Возвращает главную страницу сайта """
@@ -42,3 +44,31 @@ class GoodListView(ListView):
 class GoodDetailView(DetailView):
     """ Представление товара """
     model = Good
+
+
+class UserProfileUpdate(UpdateView):
+    model = UserProfile
+    fields = ['email', 'first_name', 'last_name']
+    template_name = 'main/userprofile_form.html'
+    
+    def get_object(self):
+        if self.request.user.is_authenticated == False:
+            return None
+
+        User = self.request.user
+        Profiles = UserProfile.objects.filter(id = User.id)
+        if Profiles.count() == 0:
+            Profile = UserProfile()
+            Profile.id = User.id
+            Profile.email = User.email
+            Profile.first_name = User.first_name
+            Profile.last_name = User.last_name
+            Profile.save()
+            return Profile
+        else:
+            return Profiles[0]
+
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)

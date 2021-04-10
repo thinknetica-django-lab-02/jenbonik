@@ -103,3 +103,20 @@ class Country(Identificated):
     class Meta:
         verbose_name = 'Страна'
         verbose_name_plural = 'Страны'
+
+
+class UserProfile(models.Model):
+    """ Профиль пользователя. Предполагается расширение модели User """
+    first_name = models.CharField(max_length = 25, verbose_name = 'Имя')
+    last_name = models.CharField(max_length = 25, verbose_name = 'Фамилия')
+    email = models.EmailField(verbose_name = 'Email')
+
+    def __str__(self):
+        return self.email
+
+    def get_absolute_url(self):
+        return reverse('user_profile')
+    
+    class Meta:
+        verbose_name = 'Профиль пользователя'
+        verbose_name_plural = 'Профили пользователей'
