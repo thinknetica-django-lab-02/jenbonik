@@ -1,4 +1,7 @@
+from django.contrib.auth.models import User
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.urls import reverse
 
 import uuid
@@ -106,13 +109,13 @@ class Country(Identificated):
 
 
 class UserProfile(models.Model):
-    """ Профиль пользователя. Предполагается расширение модели User """
-    first_name = models.CharField(max_length = 25, verbose_name = 'Имя')
-    last_name = models.CharField(max_length = 25, verbose_name = 'Фамилия')
-    email = models.EmailField(verbose_name = 'Email')
+    """ Профиль пользователя. Расширение модели User """
+    user = models.OneToOneField(User, on_delete = models.CASCADE)
+    description = models.CharField(max_length = 100, verbose_name = 'Описание',
+        help_text = 'Описание', default = '')
 
     def __str__(self):
-        return self.email
+        return self.user.username
 
     def get_absolute_url(self):
         return reverse('user_profile')
@@ -120,3 +123,16 @@ class UserProfile(models.Model):
     class Meta:
         verbose_name = 'Профиль пользователя'
         verbose_name_plural = 'Профили пользователей'
+
+
+@receiver(post_save, sender = User)
+def create_user_profile(sender, instance, created, **kwargs):
+    """ Создание профиля при создании пользователя """
+    if created:
+        UserProfile.objects.create(user = instance)
+
+
+@receiver(post_save, sender = User)
+def save_user_profile(sender, instance, **kwargs):
+    """ Сохранение профиля при сохранении пользователя """
+    instance.userprofile.save()

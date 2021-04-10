@@ -1,7 +1,13 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic import DetailView
 from django.views.generic import ListView
-from django.views.generic.edit import UpdateView
+from django.urls import reverse
+
+from main.forms import UserForm
+from main.forms import UserProfileFormset
 
 from main.models import Good
 from main.models import Tag
@@ -10,10 +16,10 @@ from main.models import UserProfile
 def home(request):
     """ Возвращает главную страницу сайта """
     return render(request, 'main/index.html', 
-    {
-        'turn_on_block': True,
-        'username': request.user.username, 
-    })
+        {
+            'turn_on_block': True,
+            'username': request.user.username, 
+        })
 
 class GoodListView(ListView):
     """ Представление списка товаров """
@@ -46,29 +52,22 @@ class GoodDetailView(DetailView):
     model = Good
 
 
-class UserProfileUpdate(UpdateView):
-    model = UserProfile
-    fields = ['email', 'first_name', 'last_name']
-    template_name = 'main/userprofile_form.html'
+@login_required
+def user_profile(request):
+    """ Данные пользователя """
+    user = request.user
+    if request.method == 'POST':
+        userform = UserForm(request.POST, request.FILES, instance = user)
+        profileformset = UserProfileFormset(request.POST, request.FILES, instance = user)
+        if profileformset.is_valid() and userform.is_valid():
+            user.save()
+            return HttpResponseRedirect(reverse('user_profile'))
+    else:
+        userform = UserForm(instance = user)
+        profileformset = UserProfileFormset(instance = user)
     
-    def get_object(self):
-        if self.request.user.is_authenticated == False:
-            return None
-
-        User = self.request.user
-        Profiles = UserProfile.objects.filter(id = User.id)
-        if Profiles.count() == 0:
-            Profile = UserProfile()
-            Profile.id = User.id
-            Profile.email = User.email
-            Profile.first_name = User.first_name
-            Profile.last_name = User.last_name
-            Profile.save()
-            return Profile
-        else:
-            return Profiles[0]
-
-
-    def form_valid(self, form):
-        form.save()
-        return super().form_valid(form)
+    return render(request, 'main/userprofile_form.html', 
+        {
+            'userform': userform,
+            'profileformset': profileformset
+        })
