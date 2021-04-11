@@ -4,6 +4,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic import DetailView
 from django.views.generic import ListView
+from django.views.generic.edit import CreateView
+from django.views.generic.edit import UpdateView
 from django.urls import reverse
 
 from main.forms import UserForm
@@ -20,6 +22,27 @@ def home(request):
             'turn_on_block': True,
             'username': request.user.username, 
         })
+
+@login_required
+def user_profile(request):
+    """ Данные пользователя """
+    user = request.user
+    if request.method == 'POST':
+        userform = UserForm(request.POST, request.FILES, instance = user)
+        profileformset = UserProfileFormset(request.POST, request.FILES, instance = user)
+        if profileformset.is_valid() and userform.is_valid():
+            user.save()
+            return HttpResponseRedirect(reverse('user_profile'))
+    else:
+        userform = UserForm(instance = user)
+        profileformset = UserProfileFormset(instance = user)
+    
+    return render(request, 'main/userprofile_form.html', 
+        {
+            'userform': userform,
+            'profileformset': profileformset
+        })
+
 
 class GoodListView(ListView):
     """ Представление списка товаров """
@@ -50,24 +73,18 @@ class GoodListView(ListView):
 class GoodDetailView(DetailView):
     """ Представление товара """
     model = Good
+    template_name = 'main/good_detail.html'
 
 
-@login_required
-def user_profile(request):
-    """ Данные пользователя """
-    user = request.user
-    if request.method == 'POST':
-        userform = UserForm(request.POST, request.FILES, instance = user)
-        profileformset = UserProfileFormset(request.POST, request.FILES, instance = user)
-        if profileformset.is_valid() and userform.is_valid():
-            user.save()
-            return HttpResponseRedirect(reverse('user_profile'))
-    else:
-        userform = UserForm(instance = user)
-        profileformset = UserProfileFormset(instance = user)
-    
-    return render(request, 'main/userprofile_form.html', 
-        {
-            'userform': userform,
-            'profileformset': profileformset
-        })
+class GoodCreate(CreateView):
+    """ Создание товара """
+    model = Good
+    template_name = 'main/good_create.html'
+    fields = ('name', 'description', 'price', 'category', 'seller', 'tags')
+
+
+class GoodUpdate(UpdateView):
+    """ Создание товара """
+    model = Good
+    template_name = 'main/good_edit.html'
+    fields = ('name', 'description', 'price', 'category', 'seller', 'tags')

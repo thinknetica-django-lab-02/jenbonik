@@ -43,6 +43,9 @@ class Good(Identificated):
     
     def get_absolute_url(self):
         return reverse('good_detail', args=[str(self.id)])
+
+    def get_edit_absolute_url(self):
+        return reverse('good_edit', args=[str(self.id)])
     
     class Meta:
         verbose_name = 'Товар'

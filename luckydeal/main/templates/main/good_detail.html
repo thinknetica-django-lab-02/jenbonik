@@ -5,5 +5,7 @@
 <h2>{{ good.name }}</h2>
 <h3>Цена: <strong>{{ good.price }}</strong> </h3>
 <h3>Продавец: {{ good.seller }} </h3>
+<p></p>
+<p><a href = "{{ good.get_edit_absolute_url }}">Изменить</a></p>
 
 {% endblock %}
