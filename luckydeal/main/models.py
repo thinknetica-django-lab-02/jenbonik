@@ -4,6 +4,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.urls import reverse
 
+import datetime
 import uuid
 
 
@@ -113,6 +114,8 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete = models.CASCADE)
     description = models.CharField(max_length = 100, verbose_name = 'Описание',
         help_text = 'Описание', default = '')
+    birth_date = models.DateField(verbose_name = 'Дата рождения',
+        help_text = 'Дата рождения', default = datetime.date.today)
 
     def __str__(self):
         return self.user.username
