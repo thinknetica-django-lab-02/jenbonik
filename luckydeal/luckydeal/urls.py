@@ -19,7 +19,9 @@ from main import views
 from django.contrib.flatpages import views as flatpages_views
 
 from main.views import GoodListView
+from main.views import GoodCreate
 from main.views import GoodDetailView
+from main.views import GoodUpdate
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,6 +29,8 @@ urlpatterns = [
     path('about/', flatpages_views.flatpage, {'url': '/about/'}, name = 'about'),
     path('contacts/', flatpages_views.flatpage, {'url': '/contacts/'}, name = 'contacts'),
     path('goods/', GoodListView.as_view(), name = 'goods'),
+    path('goods/add', GoodCreate.as_view(), name = 'good_add'),
+    path('goods/<pk>/edit', GoodUpdate.as_view(), name = 'good_edit'),
     path('goods/<pk>', GoodDetailView.as_view(), name = 'good_detail'),
     path('accounts/profile/', views.user_profile, name = 'user_profile'),
 ]
