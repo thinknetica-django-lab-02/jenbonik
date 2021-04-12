@@ -80,11 +80,11 @@ class GoodCreate(CreateView):
     """ Создание товара """
     model = Good
     template_name = 'main/good_create.html'
-    fields = ('name', 'description', 'price', 'category', 'seller', 'tags')
+    fields = ('name', 'description', 'price', 'category', 'seller', 'tags', 'image', )
 
 
 class GoodUpdate(UpdateView):
     """ Создание товара """
     model = Good
     template_name = 'main/good_edit.html'
-    fields = ('name', 'description', 'price', 'category', 'seller', 'tags')
+    fields = ('name', 'description', 'price', 'category', 'seller', 'tags', 'image', )

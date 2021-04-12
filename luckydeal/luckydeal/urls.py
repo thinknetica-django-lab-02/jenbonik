@@ -13,10 +13,12 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf import settings
 from django.contrib import admin
 from django.urls import path
 from main import views
 from django.contrib.flatpages import views as flatpages_views
+from django.contrib.staticfiles.urls import static
 
 from main.views import GoodListView
 from main.views import GoodCreate
@@ -34,3 +36,5 @@ urlpatterns = [
     path('goods/<pk>', GoodDetailView.as_view(), name = 'good_detail'),
     path('accounts/profile/', views.user_profile, name = 'user_profile'),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

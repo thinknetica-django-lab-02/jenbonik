@@ -1,4 +1,5 @@
 {% load custom_tags %}
+{% load thumbnail %}
 <div class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
@@ -8,6 +9,9 @@
                 <span class="icon-bar"></span>
             </button>
             <a href="/" class="navbar-brand">Lucky Deal ({{ user|invert }}, {% server_date_time '%m/%d/%Y %H:%M:%S' %})</a>
+            {% thumbnail user.userprofile.image "45x45" crop="center" as im %}
+                <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+            {% endthumbnail %}
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
