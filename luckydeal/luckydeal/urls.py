@@ -14,27 +14,34 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.conf import settings
+
 from django.contrib import admin
-from django.urls import path
-from main import views
-from django.contrib.flatpages import views as flatpages_views
+from django.contrib.auth.views import LoginView
+from django.contrib.flatpages.views import flatpage
 from django.contrib.staticfiles.urls import static
+
+from django.urls import path
 
 from main.views import GoodListView
 from main.views import GoodCreate
 from main.views import GoodDetailView
 from main.views import GoodUpdate
 
+from main.views import home
+from main.views import user_profile
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.home, name = 'home'),
-    path('about/', flatpages_views.flatpage, {'url': '/about/'}, name = 'about'),
-    path('contacts/', flatpages_views.flatpage, {'url': '/contacts/'}, name = 'contacts'),
+    path('', home, name = 'home'),
+    path('about/', flatpage, {'url': '/about/'}, name = 'about'),
+    path('contacts/', flatpage, {'url': '/contacts/'}, name = 'contacts'),
     path('goods/', GoodListView.as_view(), name = 'goods'),
     path('goods/add', GoodCreate.as_view(), name = 'good_add'),
     path('goods/<pk>/edit', GoodUpdate.as_view(), name = 'good_edit'),
     path('goods/<pk>', GoodDetailView.as_view(), name = 'good_detail'),
-    path('accounts/profile/', views.user_profile, name = 'user_profile'),
+    path('accounts/login/', LoginView.as_view(), name = 'login'),
+    path('accounts/profile/', user_profile, name = 'user_profile'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

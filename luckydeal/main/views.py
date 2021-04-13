@@ -23,7 +23,7 @@ def home(request):
             'username': request.user.username, 
         })
 
-@login_required
+@login_required(login_url = 'login')
 def user_profile(request):
     """ Данные пользователя """
     user = request.user
