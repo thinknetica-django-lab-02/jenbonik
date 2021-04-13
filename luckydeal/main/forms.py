@@ -19,28 +19,22 @@ class UserForm(ModelForm):
         fields = ('first_name', 'last_name', 'email', )
 
 
+ALLOW_AGE_DAYS = (365 * 18) + (18 / 4)
+
 class BirthDateField(DateField):
     def validate(self, value):
         super().validate(value)
 
-        days = (365 * 18) + (18 / 4)
-        allow_date = value + datetime.timedelta(days = days)
+        allow_date = value + datetime.timedelta(days = ALLOW_AGE_DAYS)
 
         delta = datetime.date.today() - value
         if datetime.date.today() < allow_date:
             raise ValidationError("Регистрация запрещена лицам младше 18 лет")    
 
 
-
 UserProfileFormset = inlineformset_factory(User, 
     UserProfile, extra = 1, 
-    fields = ('birth_date', 'description',),
-    exclude = ('user', ), 
-    field_classes = {
-        'description': CharField,
-        'birth_date': BirthDateField
-    },
+    fields = ('birth_date', 'description', 'image'),
     widgets = {
         'description': Textarea,
-        'birth_date': DateInput    
     })

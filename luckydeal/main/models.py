@@ -4,6 +4,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.urls import reverse
 
+from sorl.thumbnail import ImageField
+
 import datetime
 import uuid
 
@@ -37,6 +39,7 @@ class Good(Identificated):
         related_name = 'goods')
     tags = models.ManyToManyField('Tag', related_name = 'goods',
         verbose_name = 'Тэги', help_text = 'Тэги')
+    image = ImageField(verbose_name = 'Изображение', null = True, upload_to = 'main/static/images/goods')
     
     def __str__(self):
         return self.name
@@ -119,6 +122,7 @@ class UserProfile(models.Model):
         help_text = 'Описание', default = '')
     birth_date = models.DateField(verbose_name = 'Дата рождения',
         help_text = 'Дата рождения', default = datetime.date.today)
+    image = ImageField(verbose_name = 'Изображение', null = True, upload_to = 'main/static/images/users')
 
     def __str__(self):
         return self.user.username
@@ -133,12 +137,9 @@ class UserProfile(models.Model):
 
 @receiver(post_save, sender = User)
 def create_user_profile(sender, instance, created, **kwargs):
-    """ Создание профиля при создании пользователя """
+    """ Сохраниние профиля при сохранении пользователя """
     if created:
         UserProfile.objects.create(user = instance)
-
-
-@receiver(post_save, sender = User)
-def save_user_profile(sender, instance, **kwargs):
-    """ Сохранение профиля при сохранении пользователя """
-    instance.userprofile.save()
+    else:
+        instance.userprofile.save()
+    

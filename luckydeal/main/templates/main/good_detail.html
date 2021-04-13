@@ -1,8 +1,12 @@
 {% extends "main/base.html" %}
 
 {% block content %}
+{% load thumbnail %}
 
 <h2>{{ good.name }}</h2>
+{% thumbnail good.image "100x100" crop="center" as im %}
+    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+{% endthumbnail %}
 <h3>Цена: <strong>{{ good.price }}</strong> </h3>
 <h3>Продавец: {{ good.seller }} </h3>
 <p></p>
