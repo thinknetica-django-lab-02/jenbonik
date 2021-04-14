@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User, Group
+from django.core.mail import send_mail
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -141,6 +142,7 @@ def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user = instance)
         instance.groups.add(Group.objects.get(name = 'default_group'))
+        send_mail("Вы зарегистрировались!", "УРАААА!!!", None, [instance.email], html_message='<html><body><h1>УРАААА!!!</h1></body></html>')
     else:
         instance.userprofile.save()
     

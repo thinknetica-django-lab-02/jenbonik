@@ -29,18 +29,18 @@ from main.views import GoodCreate
 from main.views import GoodDetailView
 from main.views import GoodUpdate
 
-from main.views import home
-from main.views import user_profile
+from main.views import HomeView
+from main.views import UserProfileUpdate
 
 
 urlpatterns = [
-    path('', home, name = 'home'),
+    path('', HomeView.as_view(), name = 'home'),
     
     path('about/', flatpage, {'url': '/about/'}, name = 'about'),
     
     path('accounts/google_login/', TemplateView.as_view(template_name="registration/google_registration.html")),
     path('accounts/login/', LoginView.as_view(), name = 'login'),
-    path('accounts/profile/', user_profile, name = 'user_profile'),
+    path('accounts/profile/', UserProfileUpdate.as_view(), name = 'user_profile'),
     path('accounts/', include('allauth.urls')),
     
     path('admin/', admin.site.urls),
