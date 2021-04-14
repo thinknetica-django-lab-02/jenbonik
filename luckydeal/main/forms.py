@@ -9,6 +9,7 @@ from django.forms import Textarea
 from django.forms.models import inlineformset_factory
 
 from main.models import UserProfile
+from luckydeal.settings import ALLOW_AGE_DAYS
 
 import datetime
 
@@ -18,8 +19,6 @@ class UserForm(ModelForm):
         model = User
         fields = ('first_name', 'last_name', 'email', )
 
-
-ALLOW_AGE_DAYS = (365 * 18) + (18 / 4)
 
 class BirthDateField(DateField):
     def validate(self, value):
@@ -35,6 +34,9 @@ class BirthDateField(DateField):
 UserProfileFormset = inlineformset_factory(User, 
     UserProfile, extra = 1, 
     fields = ('birth_date', 'description', 'image'),
+    field_classes = {
+        'birth_date': BirthDateField, 
+    },
     widgets = {
         'description': Textarea,
     })

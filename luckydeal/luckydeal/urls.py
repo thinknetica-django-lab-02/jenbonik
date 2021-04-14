@@ -20,7 +20,9 @@ from django.contrib.auth.views import LoginView
 from django.contrib.flatpages.views import flatpage
 from django.contrib.staticfiles.urls import static
 
-from django.urls import path
+from django.views.generic import TemplateView
+
+from django.urls import include, path
 
 from main.views import GoodListView
 from main.views import GoodCreate
@@ -40,6 +42,8 @@ urlpatterns = [
     path('goods/add', GoodCreate.as_view(), name = 'good_add'),
     path('goods/<pk>/edit', GoodUpdate.as_view(), name = 'good_edit'),
     path('goods/<pk>', GoodDetailView.as_view(), name = 'good_detail'),
+    path('accounts/', include('allauth.urls')),
+    path('accounts/google_login/', TemplateView.as_view(template_name="registration/google_registration.html")),
     path('accounts/login/', LoginView.as_view(), name = 'login'),
     path('accounts/profile/', user_profile, name = 'user_profile'),
 ]
