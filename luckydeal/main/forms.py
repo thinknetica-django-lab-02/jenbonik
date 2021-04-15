@@ -26,7 +26,6 @@ class BirthDateField(DateField):
 
         allow_date = value + datetime.timedelta(days = ALLOW_AGE_DAYS)
 
-        delta = datetime.date.today() - value
         if datetime.date.today() < allow_date:
             raise ValidationError("Регистрация запрещена лицам младше 18 лет")    
 

@@ -34,18 +34,22 @@ from main.views import user_profile
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('', home, name = 'home'),
+    
     path('about/', flatpage, {'url': '/about/'}, name = 'about'),
-    path('contacts/', flatpage, {'url': '/contacts/'}, name = 'contacts'),
-    path('goods/', GoodListView.as_view(), name = 'goods'),
-    path('goods/add', GoodCreate.as_view(), name = 'good_add'),
-    path('goods/<pk>/edit', GoodUpdate.as_view(), name = 'good_edit'),
-    path('goods/<pk>', GoodDetailView.as_view(), name = 'good_detail'),
-    path('accounts/', include('allauth.urls')),
+    
     path('accounts/google_login/', TemplateView.as_view(template_name="registration/google_registration.html")),
     path('accounts/login/', LoginView.as_view(), name = 'login'),
     path('accounts/profile/', user_profile, name = 'user_profile'),
+    path('accounts/', include('allauth.urls')),
+    
+    path('admin/', admin.site.urls),
+    path('contacts/', flatpage, {'url': '/contacts/'}, name = 'contacts'),
+    
+    path('goods/', GoodListView.as_view(), name = 'goods'),
+    path('goods/add/', GoodCreate.as_view(), name = 'good_add'),
+    path('goods/<pk>/edit/', GoodUpdate.as_view(), name = 'good_edit'),
+    path('goods/<pk>/', GoodDetailView.as_view(), name = 'good_detail'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

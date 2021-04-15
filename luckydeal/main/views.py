@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.views.generic import DetailView
@@ -76,15 +77,17 @@ class GoodDetailView(DetailView):
     template_name = 'main/good_detail.html'
 
 
-class GoodCreate(CreateView):
+class GoodCreate(PermissionRequiredMixin, CreateView):
     """ Создание товара """
     model = Good
+    permission_required = 'main.add_Good'
     template_name = 'main/good_create.html'
     fields = ('name', 'description', 'price', 'category', 'seller', 'tags', 'image', )
 
 
-class GoodUpdate(UpdateView):
+class GoodUpdate(PermissionRequiredMixin, UpdateView):
     """ Создание товара """
     model = Good
+    permission_required = 'main.change_Good'
     template_name = 'main/good_edit.html'
     fields = ('name', 'description', 'price', 'category', 'seller', 'tags', 'image', )

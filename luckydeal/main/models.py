@@ -140,7 +140,7 @@ def create_user_profile(sender, instance, created, **kwargs):
     """ Сохранение профиля пользователя """
     if created:
         UserProfile.objects.create(user = instance)
-        instance.groups.add(Group.objects.get(name='default_group'))
+        instance.groups.add(Group.objects.get(name = 'default_group'))
     else:
         instance.userprofile.save()
     
