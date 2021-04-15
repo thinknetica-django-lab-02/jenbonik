@@ -7,7 +7,7 @@
     {{ profileformset.management_form }}
 
     <table>
-    {% for field in userform %}
+    {% for field in form %}
         <tr> 
             <th>{{ field.label_tag }}</th><td>{{ field }}</td>
         </tr>

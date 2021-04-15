@@ -1,13 +1,11 @@
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
 from django.views.generic import DetailView
 from django.views.generic import ListView
+from django.views.generic import TemplateView
 from django.views.generic.edit import CreateView
 from django.views.generic.edit import UpdateView
-from django.urls import reverse
 
 from main.forms import UserForm
 from main.forms import UserProfileFormset
@@ -16,33 +14,46 @@ from main.models import Good
 from main.models import Tag
 from main.models import UserProfile
 
-def home(request):
-    """ Возвращает главную страницу сайта """
-    return render(request, 'main/index.html', 
-        {
-            'turn_on_block': True,
-            'username': request.user.username, 
-        })
 
-@login_required(login_url = 'login')
-def user_profile(request):
-    """ Данные пользователя """
-    user = request.user
-    if request.method == 'POST':
-        userform = UserForm(request.POST, request.FILES, instance = user)
-        profileformset = UserProfileFormset(request.POST, request.FILES, instance = user)
-        if profileformset.is_valid() and userform.is_valid():
-            user.save()
-            return HttpResponseRedirect(reverse('user_profile'))
-    else:
-        userform = UserForm(instance = user)
-        profileformset = UserProfileFormset(instance = user)
+class HomeView(TemplateView):
+    """ Возвращает главную страницу сайта """   
+    template_name = 'main/index.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['turn_on_block'] = True
+        context['username'] = self.request.user.username
+        return context
+
+
+class UserProfileUpdate(LoginRequiredMixin, UpdateView):
+    model = User
+    template_name = 'main/userprofile_form.html'
+    success_url = '/accounts/profile/'
+    form_class = UserForm
+
+    def get_object(self, request):
+        return request.user
+
+    def get_context_data(self, **kwargs):
+        profileformset = UserProfileFormset(instance = self.get_object(kwargs['request']))
+        context = super().get_context_data(**kwargs)
+        context['profileformset'] = profileformset
+        return context
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object(request)
+        return self.render_to_response(self.get_context_data(request=request))
     
-    return render(request, 'main/userprofile_form.html', 
-        {
-            'userform': userform,
-            'profileformset': profileformset
-        })
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        self.object = self.get_object(request)
+        profileformset = UserProfileFormset(self.request.POST, self.request.FILES, instance = self.object)
+        
+        if profileformset.is_valid() and form.is_valid():
+            self.object.save()
+        
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class GoodListView(ListView):
