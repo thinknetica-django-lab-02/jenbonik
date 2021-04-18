@@ -142,7 +142,8 @@ def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user = instance)
         instance.groups.add(Group.objects.get(name = 'default_group'))
-        send_mail("Вы зарегистрировались!", "УРАААА!!!", None, [instance.email], html_message='<html><body><h1>УРАААА!!!</h1></body></html>')
+        send_mail("Вы зарегистрировались!", "УРАААА!!!", None, [instance.email], 
+            html_message='<html><body><h1>УРАААА!!!</h1></body></html>')
     else:
         instance.userprofile.save()
     
