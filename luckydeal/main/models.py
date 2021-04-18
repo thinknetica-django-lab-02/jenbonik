@@ -40,7 +40,8 @@ class Good(Identificated):
         related_name = 'goods')
     tags = models.ManyToManyField('Tag', related_name = 'goods',
         verbose_name = 'Тэги', help_text = 'Тэги')
-    image = ImageField(verbose_name = 'Изображение', null = True, upload_to = 'main/static/images/goods')
+    image = ImageField(verbose_name = 'Изображение', null = True, 
+        upload_to = 'main/static/images/goods', blank = True)
     
     def __str__(self):
         return self.name
@@ -62,8 +63,8 @@ def send_subscription(sender, instance, created, **kwargs):
     
     if created:
         for subscribtion in Subscriber.objects.all():
-            send_mail("Новый товар", sender.name, None, [subscribtion.user.email], 
-                html_message = f'<html><body><a href = "{sender.get_absolute_url()}">{sender.name}</a></body></html>')
+            send_mail("Новый товар", instance.name, None, [subscribtion.user.email], 
+                html_message = f'<html><body><a href = "{instance.get_absolute_url()}">{instance.name}</a></body></html>')
 
 
 class Category(Identificated):
