@@ -56,14 +56,14 @@ class Good(Identificated):
         verbose_name_plural = 'Товары'
 
 
-#@receiver(post_save, sender = Good)
-#def send_subscription(sender, instance, created, **kwargs):
-#    """ Отправка оповещений подписчикам """
-#    
-#    if created:
-#        for subscribtion in Subscriber.objects.all():
-#            send_mail("Новый товар", sender.name, None, [subscribtion.user.email], 
-#                html_message = f'<html><body><a href = "{sender.get_absolute_url()}">{sender.name}</a></body></html>')
+@receiver(post_save, sender = Good)
+def send_subscription(sender, instance, created, **kwargs):
+    """ Отправка оповещений подписчикам """
+    
+    if created:
+        for subscribtion in Subscriber.objects.all():
+            send_mail("Новый товар", sender.name, None, [subscribtion.user.email], 
+                html_message = f'<html><body><a href = "{sender.get_absolute_url()}">{sender.name}</a></body></html>')
 
 
 class Category(Identificated):
