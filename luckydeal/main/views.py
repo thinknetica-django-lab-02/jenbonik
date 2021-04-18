@@ -17,6 +17,7 @@ from main.models import UserProfile
 
 class HomeView(TemplateView):
     """ Возвращает главную страницу сайта """   
+    
     template_name = 'main/index.html'
 
     def get_context_data(self, **kwargs):
@@ -27,6 +28,8 @@ class HomeView(TemplateView):
 
 
 class UserProfileUpdate(LoginRequiredMixin, UpdateView):
+    """ Редактирование профиля пользователя """
+    
     model = User
     template_name = 'main/userprofile_form.html'
     success_url = '/accounts/profile/'
@@ -58,6 +61,7 @@ class UserProfileUpdate(LoginRequiredMixin, UpdateView):
 
 class GoodListView(ListView):
     """ Представление списка товаров """
+    
     model = Good
     context_object_name = 'object_list'
     template_name = 'main/good_list.html'
@@ -84,12 +88,14 @@ class GoodListView(ListView):
 
 class GoodDetailView(DetailView):
     """ Представление товара """
+    
     model = Good
     template_name = 'main/good_detail.html'
 
 
 class GoodCreate(PermissionRequiredMixin, CreateView):
     """ Создание товара """
+    
     model = Good
     permission_required = 'main.add_Good'
     template_name = 'main/good_create.html'
@@ -98,6 +104,7 @@ class GoodCreate(PermissionRequiredMixin, CreateView):
 
 class GoodUpdate(PermissionRequiredMixin, UpdateView):
     """ Создание товара """
+    
     model = Good
     permission_required = 'main.change_Good'
     template_name = 'main/good_edit.html'

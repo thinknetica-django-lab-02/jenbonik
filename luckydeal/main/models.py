@@ -56,6 +56,16 @@ class Good(Identificated):
         verbose_name_plural = 'Товары'
 
 
+#@receiver(post_save, sender = Good)
+#def send_subscription(sender, instance, created, **kwargs):
+#    """ Отправка оповещений подписчикам """
+#    
+#    if created:
+#        for subscribtion in Subscriber.objects.all():
+#            send_mail("Новый товар", sender.name, None, [subscribtion.user.email], 
+#                html_message = f'<html><body><a href = "{sender.get_absolute_url()}">{sender.name}</a></body></html>')
+
+
 class Category(Identificated):
     """ Модель категории товара. Товар может быть связан только с одной категорией """
 
@@ -103,6 +113,7 @@ class Seller(Identificated):
 
 class Country(Identificated):
     """ Страна продавца """
+    
     iso3 = models.CharField(max_length = 3, verbose_name = 'ISO3', 
         help_text = 'ISO3', default = '')
     name = models.CharField(max_length = 50, verbose_name = 'Наименование', 
@@ -118,6 +129,7 @@ class Country(Identificated):
 
 class UserProfile(models.Model):
     """ Профиль пользователя. Расширение модели User """
+    
     user = models.OneToOneField(User, on_delete = models.CASCADE)
     description = models.CharField(max_length = 100, verbose_name = 'Описание',
         help_text = 'Описание', default = '')
@@ -139,6 +151,7 @@ class UserProfile(models.Model):
 @receiver(post_save, sender = User)
 def create_user_profile(sender, instance, created, **kwargs):
     """ Сохранение профиля пользователя """
+    
     if created:
         UserProfile.objects.create(user = instance)
         instance.groups.add(Group.objects.get(name = 'default_group'))
@@ -146,4 +159,15 @@ def create_user_profile(sender, instance, created, **kwargs):
             html_message='<html><body><h1>УРАААА!!!</h1></body></html>')
     else:
         instance.userprofile.save()
+
+
+class Subscriber(Identificated):
+    """ Подписки на товары """
     
+    user = models.ForeignKey(User, on_delete = models.CASCADE,
+        verbose_name = 'Пользователь', help_text = 'Пользователь',
+        related_name = 'subscriptions')
+
+    class Meta:
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'
