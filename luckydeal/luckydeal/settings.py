@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
+from celery.schedules import crontab
 from pathlib import Path
 import luckydeal.secret as secret
 
@@ -186,12 +187,17 @@ SECONDS_IN_WEEK = 60 * 60 * 24 * 7
 # Celery
 CELERY_TIMEZONE = 'Europe/Moscow'
 CELERY_TASK_TRACK_STARTED = True
-CELERY_TASK_TIME_LIMIT = 30 * 60
 
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_BROKER_URL = 'redis://' + secret.REDIS_ADRESS
 CELERY_RESULT_BACKEND = 'redis://' + secret.REDIS_ADRESS
 CELERY_TASK_SERIALIZER = 'json'
+CELERY_BEAT_SCHEDULE = {
+    'send_subscribtions': { 
+         'task': 'main.tasks.task_subscription', 
+         'schedule': crontab(hour = 12, day_of_week = 3),
+        },          
+}
 
 # Sessions
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
