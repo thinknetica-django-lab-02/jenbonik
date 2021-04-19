@@ -58,13 +58,11 @@ class Good(Identificated):
 
 
 @receiver(post_save, sender = Good)
-def send_subscription(sender, instance, created, **kwargs):
-    """ Отправка оповещений подписчикам """
+def create_subscription(sender, instance, created, **kwargs):
+    """ Создание подписки на товар """
     
     if created:
-        for subscribtion in Subscriber.objects.all():
-            send_mail("Новый товар", instance.name, None, [subscribtion.user.email], 
-                html_message = f'<html><body><a href = "{instance.get_absolute_url()}">{instance.name}</a></body></html>')
+        Subscriber.objects.create(good = instance)
 
 
 class Category(Identificated):
@@ -137,6 +135,8 @@ class UserProfile(models.Model):
     birth_date = models.DateField(verbose_name = 'Дата рождения',
         help_text = 'Дата рождения', default = datetime.date.today)
     image = ImageField(verbose_name = 'Изображение', null = True, upload_to = 'main/static/images/users')
+    is_subscriber = models.BooleanField(verbose_name = 'Получать сообщения о новинках',
+        help_text = 'Получать сообщения о новинках', default = False)
 
     def __str__(self):
         return self.user.username
@@ -165,9 +165,9 @@ def create_user_profile(sender, instance, created, **kwargs):
 class Subscriber(Identificated):
     """ Подписки на товары """
     
-    user = models.ForeignKey(User, on_delete = models.CASCADE,
-        verbose_name = 'Пользователь', help_text = 'Пользователь',
-        related_name = 'subscriptions')
+    good = models.ForeignKey(Good, on_delete = models.CASCADE,
+        verbose_name = 'Товар', help_text = 'Товар',
+        related_name = 'subscriptions', null = True)
 
     class Meta:
         verbose_name = 'Подписка'

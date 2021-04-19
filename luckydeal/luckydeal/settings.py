@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.flatpages',
     
-    'main',
+    'main.apps.MainConfig',
     'ckeditor',
     'sorl.thumbnail',
 
@@ -174,3 +174,6 @@ LOGOUT_REDIRECT_URL = '/'
 # Email
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'test@test.ru'
+
+# Sheduler
+SECONDS_IN_WEEK = 60 * 60 * 24 * 7

@@ -43,9 +43,9 @@ class SellerAdmin(admin.ModelAdmin):
 
 @admin.register(SubscriberModel)
 class SubscriberAdmin(admin.ModelAdmin):
-    list_display = (('user'), )
-    search_fields = (('user'), )
-    ordering = (('user'), )
+    list_display = (('good'), )
+    search_fields = (('good'), )
+    ordering = (('good'), )
 
 
 class FlatPageCK(FlatPageAdmin):

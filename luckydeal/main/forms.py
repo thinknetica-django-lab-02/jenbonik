@@ -32,7 +32,7 @@ class BirthDateField(DateField):
 
 UserProfileFormset = inlineformset_factory(User, 
     UserProfile, extra = 1, 
-    fields = ('birth_date', 'description', 'image'),
+    fields = ('birth_date', 'description', 'is_subscriber', 'image'),
     field_classes = {
         'birth_date': BirthDateField, 
     },
