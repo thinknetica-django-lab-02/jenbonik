@@ -9,6 +9,7 @@ from .models import Good as GoodModel
 from .models import Category as CategoryModel
 from .models import Tag as TagModel
 from .models import Seller as SellerModel
+from .models import Subscriber as SubscriberModel
 
 
 @admin.register(GoodModel)
@@ -38,6 +39,13 @@ class SellerAdmin(admin.ModelAdmin):
     list_display = (('name'), )
     search_fields = (('name'), )
     ordering = (('name'), )
+
+
+@admin.register(SubscriberModel)
+class SubscriberAdmin(admin.ModelAdmin):
+    list_display = (('user'), )
+    search_fields = (('user'), )
+    ordering = (('user'), )
 
 
 class FlatPageCK(FlatPageAdmin):
