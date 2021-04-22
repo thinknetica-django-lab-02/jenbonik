@@ -6,17 +6,9 @@ from luckydeal.settings import SECONDS_IN_WEEK
 from main.models import UserProfile
 from main.models import Subscriber
 
-@shared_task
-def add(x, y):
-    return x + y
-
-
-@shared_task
-def task_subscription():
-    send_subscribtions()
-
 
 def send_subscribtions():
+    """ Отправка рассылок о новых товарах """
     subscriptions = Subscriber.objects.all()
 
     if subscriptions.count() == 0:
@@ -26,8 +18,8 @@ def send_subscribtions():
     html_message = ''
 
     for subscribtion in subscriptions:
-        html_message = f'{html_message}<p><a href = "{subscribtion.good.get_absolute_url()}">{subscribtion.good.name}</a></p>'
-        text_message = f'{html_message}\n{subscribtion.good.name}'
+        html_message += f'{html_message}<p><a href = "{subscribtion.good.get_absolute_url()}">{subscribtion.good.name}</a></p>'
+        text_message += f'{html_message}\n{subscribtion.good.name}'
     
     subscribers = UserProfile.objects.filter(is_subscriber = True)
 
@@ -37,3 +29,8 @@ def send_subscribtions():
     
     for subscribtion in subscriptions:
         subscribtion.delete()
+
+
+@shared_task
+def task_subscription():
+    send_subscribtions()
