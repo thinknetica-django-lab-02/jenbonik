@@ -18,6 +18,7 @@ from main.models import Tag
 from main.models import UserProfile
 
 
+@method_decorator(cache_page(settings.CACHE_TTL), name='dispatch')
 class HomeView(TemplateView):
     """ Возвращает главную страницу сайта """   
     
