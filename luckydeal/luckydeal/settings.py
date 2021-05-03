@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import .secret as secret
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '(v-#*0y&kp%r(xry8&a37w&c+jq8v9qqx3pg^&e+8c#m^qj(xc'
+SECRET_KEY = secret.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -41,13 +42,17 @@ INSTALLED_APPS = [
     'django.contrib.flatpages',
     
     'main.apps.MainConfig',
+
     'ckeditor',
+
     'sorl.thumbnail',
 
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -177,3 +182,17 @@ DEFAULT_FROM_EMAIL = 'test@test.ru'
 
 # Sheduler
 SECONDS_IN_WEEK = 60 * 60 * 24 * 7
+
+# Celery
+CELERY_TIMEZONE = 'Europe/Moscow'
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+
+CELERY_BROKER_URL = 'amqp://guest:guest@localhost'
+
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+
+# Sessions
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"

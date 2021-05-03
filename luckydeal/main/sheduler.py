@@ -31,5 +31,5 @@ def send_subscribtions():
 
 def sheduler_start():
     scheduler = BackgroundScheduler()
-    scheduler.add_job(send_subscribtions, 'interval', seconds = 20)
+    scheduler.add_job(send_subscribtions, 'interval', seconds = SECONDS_IN_WEEK)
     scheduler.start()
