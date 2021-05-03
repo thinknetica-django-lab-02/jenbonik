@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
-import .secret as secret
+import luckydeal.secret as secret
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -188,9 +188,9 @@ CELERY_TIMEZONE = 'Europe/Moscow'
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 
-CELERY_BROKER_URL = 'amqp://guest:guest@localhost'
-
 CELERY_ACCEPT_CONTENT = ['json']
+CELERY_BROKER_URL = 'redis://' + secret.REDIS_ADRESS
+CELERY_RESULT_BACKEND = 'redis://' + secret.REDIS_ADRESS
 CELERY_TASK_SERIALIZER = 'json'
 
 # Sessions
