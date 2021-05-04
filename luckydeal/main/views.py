@@ -1,6 +1,9 @@
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import HttpResponseRedirect
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.views.generic import DetailView
 from django.views.generic import ListView
 from django.views.generic import TemplateView
@@ -15,6 +18,7 @@ from main.models import Tag
 from main.models import UserProfile
 
 
+@method_decorator(cache_page(settings.CACHE_TTL), name='dispatch')
 class HomeView(TemplateView):
     """ Возвращает главную страницу сайта """   
     
@@ -58,7 +62,6 @@ class UserProfileUpdate(LoginRequiredMixin, UpdateView):
         
         return HttpResponseRedirect(self.get_success_url())
 
-
 class GoodListView(ListView):
     """ Представление списка товаров """
     
@@ -86,6 +89,7 @@ class GoodListView(ListView):
         return context
 
 
+@method_decorator(cache_page(settings.CACHE_TTL), name='dispatch')
 class GoodDetailView(DetailView):
     """ Представление товара """
     
