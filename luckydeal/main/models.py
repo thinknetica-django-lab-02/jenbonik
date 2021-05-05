@@ -42,6 +42,10 @@ class Good(Identificated):
         verbose_name = 'Тэги', help_text = 'Тэги')
     image = ImageField(verbose_name = 'Изображение', null = True, 
         upload_to = 'main/static/images/goods', blank = True)
+    counter = models.PositiveIntegerField(verbose_name='Счетчик',
+                                        help_text='Счетчик',
+                                        editable=False,
+                                        default=0)
     
     def __str__(self):
         return self.name
@@ -51,6 +55,9 @@ class Good(Identificated):
 
     def get_edit_absolute_url(self):
         return reverse('good_edit', args=[str(self.id)])
+    
+    def increment_counter(self):
+        self.counter += 1
     
     class Meta:
         verbose_name = 'Товар'
