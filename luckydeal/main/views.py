@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.core.cache import cache
 from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -62,6 +63,7 @@ class UserProfileUpdate(LoginRequiredMixin, UpdateView):
         
         return HttpResponseRedirect(self.get_success_url())
 
+
 class GoodListView(ListView):
     """ Представление списка товаров """
     
@@ -89,12 +91,27 @@ class GoodListView(ListView):
         return context
 
 
-@method_decorator(cache_page(settings.CACHE_TTL), name='dispatch')
 class GoodDetailView(DetailView):
     """ Представление товара """
     
     model = Good
     template_name = 'main/good_detail.html'
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.increment_counter()
+        self.object.save()
+
+        counter_key = f'good.{self.object.id}.counter'
+        counter = cache.get(counter_key)
+        if (counter == None):
+            counter = self.object.counter
+            cache.set(counter_key, counter, 60)
+
+        self.object = self.get_object()
+        context = self.get_context_data(object=self.object)
+        context['counter'] = counter
+        return self.render_to_response(context)
 
 
 class GoodCreate(PermissionRequiredMixin, CreateView):
