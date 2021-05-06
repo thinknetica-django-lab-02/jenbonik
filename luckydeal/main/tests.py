@@ -43,11 +43,11 @@ class FlatPagesViewTestCase(ViewTestCase):
         self.flatpage.sites.add(self.default_site)
         self._testView(url_name, required_status=required_status, args=args)   
 
-    def testContactsView(self):
-        self._testFlatPageView('/contacts/', 'contacts') 
-
     def testAboutView(self):
         self._testFlatPageView('/about/', 'about')
+    
+    def testContactsView(self):
+        self._testFlatPageView('/contacts/', 'contacts') 
 
 
 class GoodViewsTestCase(ViewTestCase):
