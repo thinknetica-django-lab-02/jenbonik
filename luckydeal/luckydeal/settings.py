@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.flatpages',
-    
+
     'main.apps.MainConfig',
 
     'ckeditor',
@@ -108,16 +108,20 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
 
@@ -158,7 +162,7 @@ ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
 ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 86400
 
-ACCOUNT_LOGOUT_REDIRECT_URL ='accounts/login/'
+ACCOUNT_LOGOUT_REDIRECT_URL = 'accounts/login/'
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
@@ -193,17 +197,17 @@ CELERY_BROKER_URL = 'redis://' + secret.REDIS_ADRESS
 CELERY_RESULT_BACKEND = 'redis://' + secret.REDIS_ADRESS
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULE = {
-    'send_subscribtions': { 
-         'task': 'main.tasks.task_subscription', 
-         'schedule': crontab(hour = 12, day_of_week = 3),
-        },          
+    'send_subscribtions': {
+         'task': 'main.tasks.task_subscription',
+         'schedule': crontab(hour=12, day_of_week=3),
+        },
 }
 
 # Sessions
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
 
-#Caches
+# Caches
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',

@@ -3,21 +3,22 @@
 from django.db import migrations, models
 import django.db.models.deletion
 
+
 def set_default_country(apps, schema_editor):
     CountryDefault = ''
     Countries = apps.get_model('main', 'country')
-    if Countries.objects.filter(iso3 = 'RUS').count() == 0:
+    if Countries.objects.filter(iso3='RUS').count() == 0:
         CountryDefault = Countries()
         CountryDefault.iso3 = 'RUS'
         CountryDefault.name = 'Россия'
         CountryDefault.save()
     else:
-        CountryDefault = Countries.objects.get(iso3 = 'RUS')
-    
+        CountryDefault = Countries.objects.get(iso3='RUS')
+
     Sellers = apps.get_model('main', 'seller')
     for seller in Sellers.objects.all().iterator():
         seller.country = CountryDefault
-        seller.save()    
+        seller.save()
 
 
 def reverse_default_country(apps, schema_editor):
@@ -35,6 +36,10 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='seller',
             name='country',
-            field=models.ForeignKey(help_text='Страна', on_delete=django.db.models.deletion.PROTECT, related_name='sellers', to='main.country', verbose_name='Страна'),
+            field=models.ForeignKey(help_text='Страна',
+                                    on_delete=django.db.models.deletion.PROTECT,
+                                    related_name='sellers',
+                                    to='main.country',
+                                    verbose_name='Страна'),
         ),
     ]

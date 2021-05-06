@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.cache import cache
 from django.http import HttpResponseRedirect
 from django.utils.decorators import method_decorator
@@ -16,13 +17,12 @@ from main.forms import UserProfileFormset
 
 from main.models import Good
 from main.models import Tag
-from main.models import UserProfile
 
 
 @method_decorator(cache_page(settings.CACHE_TTL), name='dispatch')
 class HomeView(TemplateView):
-    """ Возвращает главную страницу сайта """   
-    
+    """ Возвращает главную страницу сайта """
+
     template_name = 'main/index.html'
 
     def get_context_data(self, **kwargs):
@@ -34,7 +34,7 @@ class HomeView(TemplateView):
 
 class UserProfileUpdate(LoginRequiredMixin, UpdateView):
     """ Редактирование профиля пользователя """
-    
+
     model = User
     template_name = 'main/userprofile_form.html'
     success_url = '/accounts/profile/'
@@ -44,7 +44,8 @@ class UserProfileUpdate(LoginRequiredMixin, UpdateView):
         return request.user
 
     def get_context_data(self, **kwargs):
-        profileformset = UserProfileFormset(instance = self.get_object(kwargs['request']))
+        user = self.get_object(kwargs['request'])
+        profileformset = UserProfileFormset(instance=user)
         context = super().get_context_data(**kwargs)
         context['profileformset'] = profileformset
         return context
@@ -52,21 +53,23 @@ class UserProfileUpdate(LoginRequiredMixin, UpdateView):
     def get(self, request, *args, **kwargs):
         self.object = self.get_object(request)
         return self.render_to_response(self.get_context_data(request=request))
-    
+
     def post(self, request, *args, **kwargs):
         form = self.get_form()
         self.object = self.get_object(request)
-        profileformset = UserProfileFormset(self.request.POST, self.request.FILES, instance = self.object)
-        
+        profileformset = UserProfileFormset(self.request.POST,
+                                            self.request.FILES,
+                                            instance=self.object)
+
         if profileformset.is_valid() and form.is_valid():
             self.object.save()
-        
+
         return HttpResponseRedirect(self.get_success_url())
 
 
 class GoodListView(ListView):
     """ Представление списка товаров """
-    
+
     model = Good
     context_object_name = 'object_list'
     template_name = 'main/good_list.html'
@@ -77,23 +80,25 @@ class GoodListView(ListView):
         if tag_list == []:
             return Good.objects.order_by('name')
         else:
-            return Good.objects.filter(tags__in = tag_list).order_by('name')
+            return Good.objects.filter(tags__in=tag_list).order_by('name')
 
     def get_context_data(self, **kwargs):
         context = super(GoodListView, self).get_context_data(**kwargs)
-        context['tags'] = Tag.objects.filter(goods__in = Good.objects.all()).distinct()
+        tags = Tag.objects.filter(goods__in=Good.objects.all()).distinct()
+        context['tags'] = tags
         tag_filter = self.request.GET.getlist('tag', [])
         tag_filter_str = ""
         for tag_id in tag_filter:
             tag_filter_str = tag_filter_str + tag_id + ","
         context['tag_filter_str'] = tag_filter_str[:-1]
-        context['tag_filter'] = Tag.objects.filter(id__in = tag_filter).order_by('name')
+        tags = Tag.objects.filter(id__in=tag_filter).order_by('name')
+        context['tag_filter'] = tags
         return context
 
 
 class GoodDetailView(DetailView):
     """ Представление товара """
-    
+
     model = Good
     template_name = 'main/good_detail.html'
 
@@ -104,7 +109,7 @@ class GoodDetailView(DetailView):
 
         counter_key = f'good.{self.object.id}.counter'
         counter = cache.get(counter_key)
-        if (counter == None):
+        if (counter is None):
             counter = self.object.counter
             cache.set(counter_key, counter, 60)
 
@@ -116,17 +121,19 @@ class GoodDetailView(DetailView):
 
 class GoodCreate(PermissionRequiredMixin, CreateView):
     """ Создание товара """
-    
+
     model = Good
     permission_required = 'main.add_Good'
     template_name = 'main/good_create.html'
-    fields = ('name', 'description', 'price', 'category', 'seller', 'tags', 'image', )
+    fields = ('name', 'description', 'price', 'category',
+              'seller', 'tags', 'image', )
 
 
 class GoodUpdate(PermissionRequiredMixin, UpdateView):
     """ Создание товара """
-    
+
     model = Good
     permission_required = 'main.change_Good'
     template_name = 'main/good_edit.html'
-    fields = ('name', 'description', 'price', 'category', 'seller', 'tags', 'image', )
+    fields = ('name', 'description', 'price', 'category',
+              'seller', 'tags', 'image', )
