@@ -198,9 +198,9 @@ CELERY_RESULT_BACKEND = 'redis://' + secret.REDIS_ADRESS
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULE = {
     'send_subscribtions': {
-         'task': 'main.tasks.task_subscription',
-         'schedule': crontab(hour=12, day_of_week=3),
-        },
+        'task': 'main.tasks.task_subscription',
+        'schedule': crontab(hour=12, day_of_week=3),
+    },
 }
 
 # Sessions
