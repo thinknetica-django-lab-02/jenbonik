@@ -5,6 +5,7 @@ import datetime
 
 register = template.Library()
 
+
 @register.filter
 @stringfilter
 def invert(value: str) -> str:

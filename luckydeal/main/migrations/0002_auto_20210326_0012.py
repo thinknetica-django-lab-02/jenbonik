@@ -15,9 +15,20 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Country',
             fields=[
-                ('id', models.UUIDField(auto_created=True, default=uuid.uuid4, editable=False, primary_key=True, serialize=False, verbose_name='Идентификатор')),
-                ('iso3', models.CharField(default='', help_text='ISO3', max_length=3, verbose_name='ISO3')),
-                ('name', models.CharField(default='', help_text='Наименование', max_length=50, verbose_name='Наименование')),
+                ('id', models.UUIDField(auto_created=True,
+                                        default=uuid.uuid4,
+                                        editable=False,
+                                        primary_key=True,
+                                        serialize=False,
+                                        verbose_name='Идентификатор')),
+                ('iso3', models.CharField(default='',
+                                          help_text='ISO3',
+                                          max_length=3,
+                                          verbose_name='ISO3')),
+                ('name', models.CharField(default='',
+                                          help_text='Наименование',
+                                          max_length=50,
+                                          verbose_name='Наименование')),
             ],
             options={
                 'verbose_name': 'Страна',
@@ -27,6 +38,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='seller',
             name='country',
-            field=models.ForeignKey(help_text='Страна', null=True, on_delete=django.db.models.deletion.PROTECT, related_name='sellers', to='main.country', verbose_name='Страна'),
+            field=models.ForeignKey(help_text='Страна',
+                                    null=True,
+                                    on_delete=django.db.models.deletion.PROTECT,
+                                    related_name='sellers',
+                                    to='main.country',
+                                    verbose_name='Страна'),
         ),
     ]

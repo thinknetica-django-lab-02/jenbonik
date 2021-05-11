@@ -12,75 +12,95 @@ import uuid
 
 
 class Identificated(models.Model):
-    """ Абстрактная модель предоставляющая единообразный первичный ключ 
-    для используемых моделей. 
+    """ Абстрактная модель предоставляющая единообразный первичный ключ
+    для используемых моделей.
     Предполагается что модели будут наследовать класс Identificated"""
-    
-    id = models.UUIDField(auto_created = True, primary_key = True, 
-        verbose_name = 'Идентификатор', default = uuid.uuid4, editable = False)
-    
+
+    id = models.UUIDField(auto_created=True,
+                          primary_key=True,
+                          verbose_name='Идентификатор',
+                          default=uuid.uuid4,
+                          editable=False)
+
     class Meta:
         abstract = True
 
 
 class Good(Identificated):
     """ Товар. Содержит описание продаваемых сущностей """
-    
-    name = models.CharField(max_length = 200, verbose_name = 'Наименование', 
-        help_text = 'Наименование', default = '')
-    description = models.CharField(max_length = 500, verbose_name = 'Описание', 
-        help_text = 'Подробное описание', default = '')
-    price = models.DecimalField(max_digits = 10, decimal_places = 2, 
-        verbose_name = 'Цена', help_text = 'Цена товара')
-    category = models.ForeignKey('Category', on_delete = models.PROTECT,
-        verbose_name = 'Категория', help_text = 'Категория товара',
-        related_name = 'goods')
-    seller = models.ForeignKey('Seller', on_delete = models.PROTECT,
-        verbose_name = 'Продавец', help_text = 'Продавец товара',
-        related_name = 'goods')
-    tags = models.ManyToManyField('Tag', related_name = 'goods',
-        verbose_name = 'Тэги', help_text = 'Тэги')
-    image = ImageField(verbose_name = 'Изображение', null = True, 
-        upload_to = 'main/static/images/goods', blank = True)
+
+    name = models.CharField(max_length=200,
+                            verbose_name='Наименование',
+                            help_text='Наименование',
+                            default='')
+    description = models.CharField(max_length=500,
+                                   verbose_name='Описание',
+                                   help_text='Подробное описание',
+                                   default='')
+    price = models.DecimalField(max_digits=10,
+                                decimal_places=2,
+                                verbose_name='Цена',
+                                help_text='Цена товара')
+    category = models.ForeignKey('Category',
+                                 on_delete=models.PROTECT,
+                                 verbose_name='Категория',
+                                 help_text='Категория товара',
+                                 related_name='goods')
+    seller = models.ForeignKey('Seller',
+                               on_delete=models.PROTECT,
+                               verbose_name='Продавец',
+                               help_text='Продавец товара',
+                               related_name='goods')
+    tags = models.ManyToManyField('Tag',
+                                  related_name='goods',
+                                  verbose_name='Тэги',
+                                  help_text='Тэги')
+    image = ImageField(verbose_name='Изображение',
+                       null=True,
+                       upload_to='main/static/images/goods',
+                       blank=True)
     counter = models.PositiveIntegerField(verbose_name='Счетчик',
-                                        help_text='Счетчик',
-                                        editable=False,
-                                        default=0)
-    
+                                          help_text='Счетчик',
+                                          editable=False,
+                                          default=0)
+
     def __str__(self):
         return self.name
-    
+
     def get_absolute_url(self):
         return reverse('good_detail', args=[str(self.id)])
 
     def get_edit_absolute_url(self):
         return reverse('good_edit', args=[str(self.id)])
-    
+
     def increment_counter(self):
         self.counter += 1
-    
+
     class Meta:
         verbose_name = 'Товар'
         verbose_name_plural = 'Товары'
 
 
-@receiver(post_save, sender = Good)
+@receiver(post_save, sender=Good)
 def create_subscription(sender, instance, created, **kwargs):
     """ Создание подписки на товар """
-    
+
     if created:
-        Subscriber.objects.create(good = instance)
+        Subscriber.objects.create(good=instance)
 
 
 class Category(Identificated):
-    """ Модель категории товара. Товар может быть связан только с одной категорией """
+    """ Модель категории товара. Товар может быть связан
+    только с одной категорией """
 
-    name = models.CharField(max_length = 50, verbose_name = 'Наименование', 
-        help_text = 'Наименование', default = '')
-    
+    name = models.CharField(max_length=50,
+                            verbose_name='Наименование',
+                            help_text='Наименование',
+                            default='')
+
     def __str__(self):
         return self.name
-    
+
     class Meta:
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
@@ -89,12 +109,14 @@ class Category(Identificated):
 class Tag(Identificated):
     """ Тэг товара. Товар может быть связан с несколькими тэгами"""
 
-    name = models.CharField(max_length = 30, verbose_name = 'Наименование', 
-        help_text = 'Наименование', default = '')
-    
+    name = models.CharField(max_length=30,
+                            verbose_name='Наименование',
+                            help_text='Наименование',
+                            default='')
+
     def __str__(self):
         return self.name
-    
+
     class Meta:
         verbose_name = 'Тэг'
         verbose_name_plural = 'Тэги'
@@ -102,16 +124,20 @@ class Tag(Identificated):
 
 class Seller(Identificated):
     """ Продавец. Каждый товар принадлежит ровно одному продавцу"""
-    
-    name = models.CharField(max_length = 50, verbose_name = 'Наименование', 
-        help_text = 'Наименование', default = '')
-    country = models.ForeignKey('Country', on_delete = models.PROTECT,
-        verbose_name = 'Страна', help_text = 'Страна',
-        related_name = 'sellers')
-    
+
+    name = models.CharField(max_length=50,
+                            verbose_name='Наименование',
+                            help_text='Наименование',
+                            default='')
+    country = models.ForeignKey('Country',
+                                on_delete=models.PROTECT,
+                                verbose_name='Страна',
+                                help_text='Страна',
+                                related_name='sellers')
+
     def __str__(self):
         return self.name
-    
+
     class Meta:
         verbose_name = 'Продавец'
         verbose_name_plural = 'Продавец'
@@ -119,15 +145,19 @@ class Seller(Identificated):
 
 class Country(Identificated):
     """ Страна продавца """
-    
-    iso3 = models.CharField(max_length = 3, verbose_name = 'ISO3', 
-        help_text = 'ISO3', default = '')
-    name = models.CharField(max_length = 50, verbose_name = 'Наименование', 
-        help_text = 'Наименование', default = '')
-    
+
+    iso3 = models.CharField(max_length=3,
+                            verbose_name='ISO3',
+                            help_text='ISO3',
+                            default='')
+    name = models.CharField(max_length=50,
+                            verbose_name='Наименование',
+                            help_text='Наименование',
+                            default='')
+
     def __str__(self):
         return self.name
-    
+
     class Meta:
         verbose_name = 'Страна'
         verbose_name_plural = 'Страны'
@@ -135,46 +165,59 @@ class Country(Identificated):
 
 class UserProfile(models.Model):
     """ Профиль пользователя. Расширение модели User """
-    
-    user = models.OneToOneField(User, on_delete = models.CASCADE)
-    description = models.CharField(max_length = 100, verbose_name = 'Описание',
-        help_text = 'Описание', default = '')
-    birth_date = models.DateField(verbose_name = 'Дата рождения',
-        help_text = 'Дата рождения', default = datetime.date.today)
-    image = ImageField(verbose_name = 'Изображение', null = True, upload_to = 'main/static/images/users')
-    is_subscriber = models.BooleanField(verbose_name = 'Получать сообщения о новинках',
-        help_text = 'Получать сообщения о новинках', default = False)
+
+    user = models.OneToOneField(User,
+                                on_delete=models.CASCADE)
+    description = models.CharField(max_length=100,
+                                   verbose_name='Описание',
+                                   help_text='Описание',
+                                   default='')
+    birth_date = models.DateField(verbose_name='Дата рождения',
+                                  help_text='Дата рождения',
+                                  default=datetime.date.today)
+    image = ImageField(verbose_name='Изображение',
+                       null=True,
+                       upload_to='main/static/images/users')
+    is_subscriber = models.BooleanField(default=False,
+                                        verbose_name='Cообщать о новинках',
+                                        help_text='Cообщать о новинках', )
 
     def __str__(self):
         return self.user.username
 
     def get_absolute_url(self):
         return reverse('user_profile')
-    
+
     class Meta:
         verbose_name = 'Профиль пользователя'
         verbose_name_plural = 'Профили пользователей'
 
 
-@receiver(post_save, sender = User)
+@receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     """ Сохранение профиля пользователя """
-    
+
     if created:
-        UserProfile.objects.create(user = instance)
-        instance.groups.add(Group.objects.get(name = 'default_group'))
-        send_mail("Вы зарегистрировались!", "УРАААА!!!", None, [instance.email], 
-            html_message='<html><body><h1>УРАААА!!!</h1></body></html>')
+        UserProfile.objects.create(user=instance)
+        instance.groups.add(Group.objects.get(name='default_group'))
+        send_mail("Вы зарегистрировались!",
+                  "УРАААА!!!",
+                  None,
+                  [instance.email],
+                  html_message='<html><body><h1>УРАААА!!!</h1></body></html>')
     else:
         instance.userprofile.save()
 
 
 class Subscriber(Identificated):
     """ Подписки на товары """
-    
-    good = models.ForeignKey(Good, on_delete = models.CASCADE,
-        verbose_name = 'Товар', help_text = 'Товар',
-        related_name = 'subscriptions', null = True)
+
+    good = models.ForeignKey(Good,
+                             on_delete=models.CASCADE,
+                             verbose_name='Товар',
+                             help_text='Товар',
+                             related_name='subscriptions',
+                             null=True)
 
     class Meta:
         verbose_name = 'Подписка'

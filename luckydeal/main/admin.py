@@ -17,7 +17,10 @@ class GoodAdmin(admin.ModelAdmin):
     list_display = ('name', 'price', 'category', 'seller')
     search_fields = ('category', 'seller', 'tags')
     ordering = (('name'), )
-    fields = (('name', 'price'), ('description') ,('seller', 'category'), ('tags'))
+    fields = (('name', 'price'),
+              ('description'),
+              ('seller', 'category'),
+              ('tags'))
 
 
 @admin.register(CategoryModel)
